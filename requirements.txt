@@ -1,4 +1,16 @@
-backtrader==1.9.78.123
-pandas==2.0.3
-matplotlib==3.7.2
-numpy==1.24.3
+# 美股数据获取器依赖包
+# 安装方法: pip install -r requirements.txt
+
+# 核心依赖
+yfinance>=0.2.0          # 获取股票数据
+pandas>=1.3.0,<3.0       # 数据处理
+numpy>=1.20.0,<2.0       # 数值计算（必须<2.0，避免兼容性问题）
+pymysql>=1.0.0           # MySQL数据库连接
+
+# 回测相关（可选）
+backtrader>=1.9.78.123   # 策略回测框架
+matplotlib>=3.7.0        # 数据可视化
+
+# 其他工具（可选）
+requests>=2.31.0         # HTTP请求
+beautifulsoup4>=4.11.0   # HTML解析

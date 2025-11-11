@@ -1,126 +1,98 @@
-# 双均线交叉策略回测
+# 量化交易项目
 
-## 项目简介
-
-本项目使用backtrader框架实现了经典的双均线交叉策略回测系统。
-
-## 策略说明
-
-**双均线交叉策略**是一种经典的技术分析策略：
-
-- **买入信号**：当短期均线（默认5日）上穿长期均线（默认20日）时买入
-- **卖出信号**：当短期均线下穿长期均线时卖出
-
-## 功能特性
-
-- ✅ 支持多个股票同时回测
-- ✅ 自动识别CSV文件格式（支持GBK和UTF-8编码）
-- ✅ 完整的交易日志记录
-- ✅ 详细的回测分析指标（夏普比率、最大回撤、收益率等）
-- ✅ 可视化图表展示
-- ✅ 自动计算交易手续费
-
-## 安装依赖
-
-```bash
-pip3 install -r requirements.txt
-```
-
-## 使用方法
-
-### 快速开始（推荐新手）
-
-运行简化版示例：
-
-```bash
-python3 simple_example.py
-```
-
-这个脚本只有60行代码，非常适合学习和快速测试。
-
-### 完整回测（推荐实际使用）
-
-运行完整版回测程序：
-
-```bash
-python3 dual_ma_strategy.py
-```
-
-程序会自动扫描当前目录下的所有CSV文件并进行回测。
-
-### 数据格式要求
-
-CSV文件应包含以下列：
-
-- 日期/交易日期
-- 开盘价
-- 最高价
-- 最低价
-- 收盘价
-- 成交量
-
-### 回测结果
-
-回测完成后会显示：
-
-- 初始资金和期末资金
-- 收益率
-- 夏普比率
-- 最大回撤
-- 交易统计（总交易次数、盈利交易、亏损交易、胜率）
-- 可视化图表（K线图+均线+交易信号）
-
-## 参数配置
-
-可以在`DualMovingAverageStrategy`类中修改策略参数：
-
-```python
-params = (
-    ('fast_period', 5),   # 短期均线周期
-    ('slow_period', 20),  # 长期均线周期
-    ('printlog', True),   # 是否打印日志
-)
-```
-
-可以在`main()`函数中修改回测参数：
-
-```python
-initial_cash = 100000.0  # 初始资金（默认10万）
-commission = 0.001       # 手续费率（默认0.1%）
-```
+基于Python的量化交易工具和策略集合。
 
 ## 项目结构
 
 ```
-.
-├── dual_ma_strategy.py    # 完整版回测程序（带详细分析）
-├── simple_example.py      # 简化版示例（适合学习）
-├── test_csv.py           # CSV文件格式测试工具
-├── requirements.txt      # 依赖包列表
-├── README.md            # 项目说明文档
-├── sz301622.csv         # 股票数据文件1（英思特）
-└── sz301628.csv         # 股票数据文件2（强达）
+backtrader/
+├── stock_data_tool/      # 股票数据获取工具
+├── strategies/           # 量化策略代码
+└── requirements.txt      # 项目依赖
 ```
 
-## 回测指标说明
+## 模块说明
 
-- **期末资金**：回测结束时的账户总资金
-- **收益率**：相对于初始资金的收益百分比
-- **夏普比率**：衡量风险调整后收益的指标，越高越好
-- **最大回撤**：从峰值到谷底的最大跌幅百分比
-- **胜率**：盈利交易占总交易的比例
+### 📊 stock_data_tool - 股票数据获取工具
 
-## 注意事项
+通用的股票数据获取工具，支持任意市场股票代码。
 
-1. CSV文件编码支持GBK和UTF-8
-2. 程序会自动识别中文列名并进行映射
-3. 默认使用95%的可用资金进行交易
-4. 手续费按每次交易金额的0.1%计算
-5. 图表显示需要matplotlib支持，可能需要GUI环境
+**特性**：
+- ✅ 支持美股、A股、港股等
+- ✅ 多种时间周期和K线类型
+- ✅ 导出CSV、JSON、SQLite格式
+- ✅ 简洁的配置文件
 
-## 扩展建议
+**快速开始**：
+```bash
+cd stock_data_tool
+python3 main.py
+```
 
-- 可以添加更多技术指标（RSI、MACD、布林带等）
-- 可以实现参数优化功能
-- 可以添加风险控制模块（止损、止盈）
-- 可以导出回测报告为PDF或Excel
+详见：[stock_data_tool/README.md](stock_data_tool/README.md)
+
+---
+
+### 📈 strategies - 量化策略
+
+包含各种量化交易策略的回测代码。
+
+**策略列表**：
+- 双均线策略
+- 月级波段策略
+- 特斯拉专用策略
+
+**使用方法**：
+```python
+import backtrader as bt
+from strategies.dual_ma_strategy import DualMovingAverageStrategy
+
+cerebro = bt.Cerebro()
+cerebro.addstrategy(DualMovingAverageStrategy)
+cerebro.run()
+```
+
+详见：[strategies/README.md](strategies/README.md)
+
+---
+
+## 安装依赖
+
+```bash
+pip install -r requirements.txt
+```
+
+## 快速开始
+
+### 1. 获取股票数据
+
+```bash
+cd stock_data_tool
+# 修改 config.py 配置
+python3 main.py
+```
+
+### 2. 运行策略回测
+
+```bash
+cd strategies
+python3 dual_ma_strategy.py
+```
+
+## 依赖
+
+- Python 3.8+
+- yfinance - 股票数据获取
+- pandas - 数据处理
+- backtrader - 策略回测
+- matplotlib - 数据可视化
+
+## 文档
+
+- [股票数据工具文档](stock_data_tool/README.md)
+- [策略说明文档](strategies/README.md)
+- [历史文档](stock_data_tool/docs/)
+
+## 许可
+
+MIT License

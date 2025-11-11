@@ -125,7 +125,7 @@ class MonthlySwingOptimized(bt.Strategy):
         if order.status in [order.Completed]:
             if order.isbuy():
                 self.log(
-                    f'✅ 买入执行 - 价格: {order.executed.price:.2f}, '
+                    f'[OK] 买入执行 - 价格: {order.executed.price:.2f}, '
                     f'数量: {order.executed.size:.0f}, '
                     f'成本: {order.executed.value:.2f}, '
                     f'手续费: {order.executed.comm:.2f}'
@@ -140,14 +140,14 @@ class MonthlySwingOptimized(bt.Strategy):
                     
             else:
                 self.log(
-                    f'❌ 卖出执行 - 价格: {order.executed.price:.2f}, '
+                    f'[ERROR] 卖出执行 - 价格: {order.executed.price:.2f}, '
                     f'数量: {order.executed.size:.0f}, '
                     f'成本: {order.executed.value:.2f}, '
                     f'手续费: {order.executed.comm:.2f}'
                 )
 
         elif order.status in [order.Canceled, order.Margin, order.Rejected]:
-            self.log(f'⚠️  订单异常 - 状态: {order.getstatusname()}')
+            self.log(f'[WARN]  订单异常 - 状态: {order.getstatusname()}')
 
         self.order = None
 
@@ -193,11 +193,11 @@ class MonthlySwingOptimized(bt.Strategy):
         if satisfied_count >= self.params.min_conditions:
             self.log(
                 f'🔔 入场信号检查 ({satisfied_count}/3条件满足):\n'
-                f'   ├─ MACD金叉: {"✅" if condition1_macd else "❌"} '
+                f'   ├─ MACD金叉: {"[OK]" if condition1_macd else "[ERROR]"} '
                 f'(DIF:{self.macd_line[0]:.4f}, DEA:{self.signal_line[0]:.4f})\n'
-                f'   ├─ 价格>MA60: {"✅" if condition2_ma else "❌"} '
+                f'   ├─ 价格>MA60: {"[OK]" if condition2_ma else "[ERROR]"} '
                 f'(价格:{self.dataclose[0]:.2f}, MA60:{self.ma60[0]:.2f})\n'
-                f'   └─ 成交量放大: {"✅" if condition3_volume else "❌"} '
+                f'   └─ 成交量放大: {"[OK]" if condition3_volume else "[ERROR]"} '
                 f'(当前:{self.datavolume[0]:.0f}, 均值:{self.volume_ma[0]:.0f}, '
                 f'比率:{self.datavolume[0]/self.volume_ma[0]:.2f})',
                 doprint=True
@@ -363,7 +363,7 @@ def run_backtest():
     })
     df_monthly.dropna(inplace=True)
     
-    print(f'✅ 数据加载完成 - 月线数据: {len(df_monthly)}条')
+    print(f'[OK] 数据加载完成 - 月线数据: {len(df_monthly)}条')
     print(f'   日期范围: {df_monthly.index[0].date()} 至 {df_monthly.index[-1].date()}')
     
     # 创建数据源
@@ -440,7 +440,7 @@ def run_backtest():
     print(f'\n📉 正在生成图表...')
     cerebro.plot(style='candlestick', volume=True)
     
-    print(f'\n✅ 回测完成！')
+    print(f'\n[OK] 回测完成！')
 
 
 if __name__ == '__main__':
